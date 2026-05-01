@@ -164,52 +164,28 @@ def userlogin():
 @app.route('/register')
 def register():
     return render_template('UserApp/Register.html')
-# @app.route('/RegAction', methods=['POST'])
-# def RegAction():
-#     if request.method == 'POST':
-#         name=request.form['name']
-#         email=request.form['email']
-#         mobile=request.form['mobile']
-#         username=request.form['username']
-#         password=request.form['password']
-
-#         con=sqlite3.connect('database.db')
-#         cur=con.cursor()
-#         #cur.execute("create table user(name varchar(100),email varchar(200),mobile varchar(200),username varchar(100),password varchar(100))")
-#         cur.execute("select * from user where username='"+username+"'and password='"+password+"'")
-#         data=cur.fetchone()
-#         if data is None:
-#             cur=con.cursor()
-#             cur.execute("insert into user values('"+name+"','"+email+"','"+mobile+"','"+username+"','"+password+"')")
-#             con.commit()
-#             return render_template('UserApp/Register.html', msg="Successfully Registered..!!")
-#         else:
-#             return render_template('UserApp/Register.html', msg="username and password is already exist..!!")
-        
 @app.route('/RegAction', methods=['POST'])
 def RegAction():
+    if request.method == 'POST':
+        name=request.form['name']
+        email=request.form['email']
+        mobile=request.form['mobile']
+        username=request.form['username']
+        password=request.form['password']
 
-    name=request.form['name']
-    email=request.form['email']
-    mobile=request.form['mobile']
-    username=request.form['username']
-    password=request.form['password']
-
-    con=sqlite3.connect('database.db')
-    cur=con.cursor()
-
-    cur.execute("create table if not exists user(name text,email text,mobile text,username text,password text)")
-
-    cur.execute("select * from user where username='"+username+"'")
-    data=cur.fetchone()
-
-    if data is None:
-        cur.execute("insert into user values('"+name+"','"+email+"','"+mobile+"','"+username+"','"+password+"')")
-        con.commit()
-        return render_template('UserApp/Register.html', msg="Successfully Registered..!!")
-
-    else:
-        return render_template('UserApp/Register.html', msg="Username already exists..!!")
+        con=sqlite3.connect('database.db')
+        cur=con.cursor()
+        #cur.execute("create table user(name varchar(100),email varchar(200),mobile varchar(200),username varchar(100),password varchar(100))")
+        cur.execute("select * from user where username='"+username+"'and password='"+password+"'")
+        data=cur.fetchone()
+        if data is None:
+            cur=con.cursor()
+            cur.execute("insert into user values('"+name+"','"+email+"','"+mobile+"','"+username+"','"+password+"')")
+            con.commit()
+            return render_template('UserApp/Register.html', msg="Successfully Registered..!!")
+        else:
+            return render_template('UserApp/Register.html', msg="username and password is already exist..!!")
+        
 
 app.secret_key = '123'
 @app.route('/UserAction', methods=['POST'])
@@ -304,6 +280,7 @@ def DetectAction():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
